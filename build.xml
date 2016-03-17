@@ -1,0 +1,57 @@
+<project name="pvg" default="buildit" basedir=".">
+
+	<property name="root" location="." />
+	<property name="src" location="${root}/src" />
+	<property name="build" location="${root}/build" />
+	<property name="comp" location="${build}/compiled" />
+	<property name="toDist" location="${build}/toDist" />
+	<property name="dist" location="${root}/dist" />
+	<property name="reger" value="Registrerare.jar" />
+	<property name="resulter" value="Server.jar" />
+	
+	<property name="testsrc" location="src/test/" />
+
+	<target name="buildit" depends="init, compile, jar, dist, clean">
+	</target>
+
+	<target name="init">
+		<delete dir="${build}" /> <!-- if previous build failed there will be lingering files -->
+		<mkdir dir="${build}" />
+		<mkdir dir="${comp}" />
+		<mkdir dir="${toDist}" />
+		<delete dir="${dist}" />
+		<mkdir dir="${dist}" />
+	</target>
+
+	<target name="compile" depends="init">
+		<javac srcdir="${src}" destdir="${comp}" includeantruntime="false" target="1.8" source="1.8"/>
+	</target>
+	
+	<target name="jar" depends="compile">
+		<jar basedir="${comp}" destfile="${toDist}/${reger}">
+			<manifest>
+				<attribute name="Main-Class" value="register.Register" />
+				<attribute name="Class-Path" value="." />
+			</manifest>
+		</jar>
+		<jar basedir="${comp}" destfile="${toDist}/${resulter}">
+			<manifest>
+				<attribute name="Main-Class" value="server.Main" />
+				<attribute name="Class-Path" value="." />
+			</manifest>
+		</jar>
+		
+	</target>
+	
+
+	<target name="dist" depends="jar">
+		<copydir src="${toDist}" dest="${dist}"/>	
+	</target>
+
+
+	<target name="clean" description="clean up">
+		<delete dir="${build}" />
+	</target>
+
+</project>
+
